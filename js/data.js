@@ -60,7 +60,7 @@ const getUser = () => {
 
 const createAd = () => ({
   author: {
-    avatar: `img/avatars/user${getUser}.png`,
+    avatar: `img/avatars/user${getUser()}.png`,
   },
   offer: {
     title: getRandomArrayElement(TITLES),
