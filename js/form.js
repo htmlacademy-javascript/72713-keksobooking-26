@@ -8,6 +8,11 @@ const addDisabled = (status) => {
     formElemets.forEach((element) => {
       element.disabled = true;
     });
+  } else {
+    formContainer.classList.remove('ad-form--disabled');
+    formElemets.forEach((element) => {
+      element.disabled = false;
+    });
   }
 };
 
