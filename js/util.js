@@ -31,4 +31,8 @@ const getRandomArray = (ourArray) => {
 
 };
 
-export {getRandomInteger, getRandom, getRandomArrayElement, getRandomArray};
+const checkTiteLength = (value, min, max) => value.length >= min && value.length <= max;
+
+const checkPrice = (value, max) => value <= max;
+
+export {getRandomInteger, getRandom, getRandomArrayElement, getRandomArray, checkTiteLength, checkPrice};
