@@ -13,7 +13,6 @@ const timeOut = formContainer.querySelector('#timeout');
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE = 100000;
-let currentType = houseType.value;
 const ROOM_OPTION = {
   '1': ['1'],
   '2': ['1', '2'],
@@ -45,7 +44,7 @@ const TYPES = {
 };
 
 const addDisabled = (status) => {
-  if (status === false) {
+  if (!status) {
     formContainer.classList.add('ad-form--disabled');
     formElemets.forEach((element) => {
       element.disabled = true;
@@ -116,15 +115,15 @@ formPrice.addEventListener('change', function () {
   priceSlider.noUiSlider.set(this.value);
 });
 
-houseType.addEventListener('change', (evt) => {
-  currentType = evt.target.value;
-  formPrice.min = TYPES[currentType].min;
-  formPrice.placeholder = `от ${TYPES[currentType].placeholder} ₽`;
+houseType.addEventListener('change', () => {
+  formPrice.min = TYPES[houseType.value].min;
+  formPrice.placeholder = `от ${TYPES[houseType.value].placeholder} ₽`;
 });
 
+const monPriceText = () => `Цена не менее ${TYPES[houseType.value].min}!`;
+
 //Не получается заставить при проверке в сообщении выводить корректную минимальную цену
-pristine.addValidator(formPrice, (value) => checkPriceMin(value, currentType),
-  `Цена не менее ${TYPES[houseType.value].min}!`);
+pristine.addValidator(formPrice, checkPriceMin, monPriceText);
 
 pristine.addValidator(formTitle, (value) => checkTiteLength(value, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH),
   `Заголовок должен быть от ${MIN_TITLE_LENGTH} до ${MAX_TITLE_LENGTH} символов!`);
