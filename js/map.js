@@ -52,7 +52,7 @@ const getMap = () => {
 };
 
 const setOffersMarker = (offers) => {
-  const {location: {lat, lng,}} = offers;
+  const {location: {lat, lng}} = offers;
   const offersMarker = L.marker({
     lat,
     lng,
@@ -87,4 +87,4 @@ const initMap = (offers) => {
 
 formAddress.value = `${MAIN_MARKER_COORDINATE.lat}, ${MAIN_MARKER_COORDINATE.lng}`;
 
-export {initMap, resetMap};
+export {initMap, resetMap, setOffersMarker};
