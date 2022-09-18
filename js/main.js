@@ -1,11 +1,17 @@
-import {createManyAds} from './data.js';
 //import {renderNewOffer} from './offers.js';
-//import {addDisabled} from './form.js';
+import {addDisabled, setOfferformSubmit, resetForm} from './form.js';
 import {initMap} from './map.js';
-
-const ADS_NUMBERS = 10;
+import {getData} from './api.js';
+import {showAlert} from './util.js';
 //renderNewOffer(createManyAds(ADS_NUMBERS));
 
-//addDisabled(true);
-const boo = createManyAds(ADS_NUMBERS);
-initMap(boo);
+
+addDisabled(false);
+getData((newOffers) => {
+  initMap(newOffers);
+},
+() => {
+  showAlert('Ошибка. Обновите страницу');
+});
+
+setOfferformSubmit (resetForm);

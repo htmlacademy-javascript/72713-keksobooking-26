@@ -87,4 +87,4 @@ const initMap = (offers) => {
 
 formAddress.value = `${MAIN_MARKER_COORDINATE.lat}, ${MAIN_MARKER_COORDINATE.lng}`;
 
-export {initMap};
+export {initMap, resetMap};
