@@ -6,19 +6,45 @@ const formTitle = formContainer.querySelector('#title');
 const formPrice = formContainer.querySelector('#price');
 const roomNumber = formContainer.querySelector('#room_number');
 const guestNumber = formContainer.querySelector('#capacity');
+const priceSlider = formContainer.querySelector('.ad-form__slider');
+const houseType = formContainer.querySelector('#type');
+const timeIn = formContainer.querySelector('#timein');
+const timeOut = formContainer.querySelector('#timeout');
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE = 100000;
-
 const ROOM_OPTION = {
   '1': ['1'],
-  '2': ['2', '1'],
-  '3': ['3', '2', '1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
   '100': ['0']
 };
 
+const TYPES = {
+  bungalow: {
+    min: 0,
+    placeholder: 0,
+  },
+  flat: {
+    min: 1000,
+    placeholder: 1000,
+  },
+  hotel: {
+    min: 3000,
+    placeholder: 3000,
+  },
+  house: {
+    min: 5000,
+    placeholder: 5000,
+  },
+  palace: {
+    min: 10000,
+    placeholder: 10000,
+  },
+};
+
 const addDisabled = (status) => {
-  if (status === false) {
+  if (!status) {
     formContainer.classList.add('ad-form--disabled');
     formElemets.forEach((element) => {
       element.disabled = true;
@@ -30,6 +56,13 @@ const addDisabled = (status) => {
     });
   }
 };
+
+timeIn.addEventListener('change', () => {
+  timeOut.value = timeIn.value;
+});
+timeOut.addEventListener('change', () => {
+  timeIn.value = timeOut.value;
+});
 
 const pristine = new Pristine (formContainer, {
   classTo:'ad-form__element',
@@ -53,6 +86,44 @@ const errorTextCapacity = () => {
     return '100 комнат не подходят для гостей';
   }
 };
+
+const checkPriceMin = () => formPrice.value >= TYPES[houseType.value].min;
+
+noUiSlider.create(priceSlider, {
+  range: {
+    min: 0,
+    max: 100000
+  },
+  start: 0,
+  step: 1000,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  }
+});
+
+priceSlider.noUiSlider.on('update', (values, handle) => {
+  formPrice.value = values[handle];
+});
+
+formPrice.addEventListener('change', function () {
+  priceSlider.noUiSlider.set(this.value);
+});
+
+houseType.addEventListener('change', () => {
+  formPrice.min = TYPES[houseType.value].min;
+  formPrice.placeholder = `от ${TYPES[houseType.value].placeholder} ₽`;
+});
+
+const monPriceText = () => `Цена не менее ${TYPES[houseType.value].min}!`;
+
+//Не получается заставить при проверке в сообщении выводить корректную минимальную цену
+pristine.addValidator(formPrice, checkPriceMin, monPriceText);
 
 pristine.addValidator(formTitle, (value) => checkTiteLength(value, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH),
   `Заголовок должен быть от ${MIN_TITLE_LENGTH} до ${MAX_TITLE_LENGTH} символов!`);

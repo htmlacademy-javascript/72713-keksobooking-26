@@ -64,7 +64,7 @@ const createAd = () => ({
   },
   offer: {
     title: getRandomArrayElement(TITLES),
-    address: `${location.lat}, ${location.lng}`,
+    address: `${getRandom(LAT[0], LAT[1], 5)}, ${getRandom(LNG[0], LNG[1], 5)}`,
     price: getRandom(0, 100000.55, 2),
     type: getRandomArrayElement(TYPES),
     rooms: getRandomInteger(1, 8),
