@@ -1,3 +1,4 @@
+import {checkTiteLength, checkPrice} from './util.js';
 import{showSuccessMessage, showErrMessage} from './message.js';
 import {sendData} from './api.js';
 import {resetMap} from './map.js';
