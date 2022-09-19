@@ -16,7 +16,7 @@ const getData = async(onSuccess, onFail) => {
 
 const sendData = async (onSuccess, onFail, body) => {
   try {
-    const response = await fetch(' https://26.javascript.pages.academy/keksobooking',
+    const response = await fetch('https://26.javascript.pages.academy/keksobooking',
       {
         method: 'POST',
         body,
@@ -28,7 +28,7 @@ const sendData = async (onSuccess, onFail, body) => {
     onSuccess();
 
   } catch (err) {
-    onFail('Не удалось отправить форму. Попробуйте ещё раз');
+    onFail(err);
   }
 };
 

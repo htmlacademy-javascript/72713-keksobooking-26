@@ -1,6 +1,6 @@
-import {checkTiteLength, checkPrice} from './util.js';
+import {checkTiteLength, checkPrice, showAlert} from './util.js';
 import{showSuccessMessage, showErrMessage} from './message.js';
-import {sendData} from './api.js';
+import {sendData, getData} from './api.js';
 import {resetMap} from './map.js';
 import {resetFilters} from './filters.js';
 
@@ -177,7 +177,7 @@ const setOfferformSubmit = () => {
       sendData(() => {
         unblockSubmitButton();
         showSuccessMessage();
-        resetForm();
+        getData(resetForm, () => {showAlert('Ошибка.Обновите страницу!');});
       },
       () => {
         unblockSubmitButton();
@@ -188,5 +188,5 @@ const setOfferformSubmit = () => {
     }
   });
 };
-export {addDisabled, setOfferformSubmit, resetForm};
+export {addDisabled, setOfferformSubmit/*, resetForm*/};
 
