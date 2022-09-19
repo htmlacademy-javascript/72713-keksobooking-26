@@ -1,5 +1,3 @@
-//import {createManyAds} from './data.js';
-
 const TYPES_IN_RUS = {
   'palace': 'Дворец',
   'flat': 'Квартира',
@@ -7,10 +5,7 @@ const TYPES_IN_RUS = {
   'bungalow': 'Бунгало',
   'hotel': 'Отель',
 };
-//const ADS_NUMBERS = 10;
-//createManyAds(ADS_NUMBERS);
 
-//const offerContainer = document.querySelector('#map-canvas');
 const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
 
 const removeUnnecessary = (blockClass, element) => {
@@ -87,7 +82,6 @@ const renderNewOffer = (newOffers) => {
 
   getPhotos(newOffers.offer.photos, offerElement);
 
-  //newOffersFragment.appendChild(offerElement);
   return offerElement;
 };
 

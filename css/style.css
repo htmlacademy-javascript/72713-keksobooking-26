@@ -1039,3 +1039,8 @@ fieldset {
 .ad-form__element--error {
   color: #f75757;
 }
+
+.modal-open {
+  height: 100vh;
+  overflow: hidden;
+}

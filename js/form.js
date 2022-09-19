@@ -1,4 +1,7 @@
 import {checkTiteLength, checkPrice} from './util.js';
+import{showSuccessMessage, showErrMessage} from './message.js';
+import {sendData} from './api.js';
+import {resetMap} from './map.js';
 
 const formContainer = document.querySelector('.ad-form');
 const formElemets = document.querySelectorAll('fieldset', 'select', '.map__filters');
@@ -10,6 +13,8 @@ const priceSlider = formContainer.querySelector('.ad-form__slider');
 const houseType = formContainer.querySelector('#type');
 const timeIn = formContainer.querySelector('#timein');
 const timeOut = formContainer.querySelector('#timeout');
+const formDescription = formContainer.querySelector('#description');
+const submitButton = formContainer.querySelector('.ad-form__submit');
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE = 100000;
@@ -88,6 +93,29 @@ const errorTextCapacity = () => {
 };
 
 const checkPriceMin = () => formPrice.value >= TYPES[houseType.value].min;
+const minPriceText = () => `Цена не менее ${TYPES[houseType.value].min}!`;
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую...';
+};
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+const resetForm = () => {
+  formTitle.value = '';
+  roomNumber.selectedIndex = 0;
+  houseType.selectedIndex = 0;
+  guestNumber.selectedIndex = 2;
+  timeIn.selectedIndex = 0;
+  timeOut.selectedIndex = 0;
+  formDescription.value = '';
+  priceSlider.noUiSlider.set(0);
+  formPrice.value = 0;
+  resetMap();
+};
 
 noUiSlider.create(priceSlider, {
   range: {
@@ -120,10 +148,7 @@ houseType.addEventListener('change', () => {
   formPrice.placeholder = `от ${TYPES[houseType.value].placeholder} ₽`;
 });
 
-const monPriceText = () => `Цена не менее ${TYPES[houseType.value].min}!`;
-
-//Не получается заставить при проверке в сообщении выводить корректную минимальную цену
-pristine.addValidator(formPrice, checkPriceMin, monPriceText);
+pristine.addValidator(formPrice, checkPriceMin, minPriceText);
 
 pristine.addValidator(formTitle, (value) => checkTiteLength(value, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH),
   `Заголовок должен быть от ${MIN_TITLE_LENGTH} до ${MAX_TITLE_LENGTH} символов!`);
@@ -134,10 +159,25 @@ pristine.addValidator(formPrice, (value) => checkPrice(value, MAX_PRICE),
 pristine.addValidator(roomNumber, checkCapacity, errorTextCapacity);
 pristine.addValidator(guestNumber, checkCapacity, errorTextCapacity);
 
-formContainer.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
-
-export {addDisabled};
+const setOfferformSubmit = () => {
+  formContainer.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendData(() => {
+        unblockSubmitButton();
+        showSuccessMessage();
+        resetForm();
+      },
+      () => {
+        unblockSubmitButton();
+        showErrMessage();
+      },
+      new FormData(evt.target),
+      );
+    }
+  });
+};
+export {addDisabled, setOfferformSubmit, resetForm};
 
