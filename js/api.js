@@ -1,6 +1,6 @@
-import {showAlert} from './util.js';
+//import {showAlert} from './util.js';
 
-const getData = async(onSuccess) => {
+const getData = async(onSuccess, onFail) => {
   try {
     const response = await fetch('https://26.javascript.pages.academy/keksobooking/data');
     if (!response.ok) {
@@ -10,7 +10,7 @@ const getData = async(onSuccess) => {
     onSuccess(data);
 
   } catch (err) {
-    showAlert('Ошибка. Обновите страницу');
+    onFail(err.message);
   }
 };
 

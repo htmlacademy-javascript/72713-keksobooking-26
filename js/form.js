@@ -2,8 +2,10 @@ import {checkTiteLength, checkPrice} from './util.js';
 import{showSuccessMessage, showErrMessage} from './message.js';
 import {sendData} from './api.js';
 import {resetMap} from './map.js';
+import {resetFilters} from './filters.js';
 
 const formContainer = document.querySelector('.ad-form');
+const filterContainer = document.querySelector('.map__filters');
 const formElemets = document.querySelectorAll('fieldset', 'select', '.map__filters');
 const formTitle = formContainer.querySelector('#title');
 const formPrice = formContainer.querySelector('#price');
@@ -13,7 +15,7 @@ const priceSlider = formContainer.querySelector('.ad-form__slider');
 const houseType = formContainer.querySelector('#type');
 const timeIn = formContainer.querySelector('#timein');
 const timeOut = formContainer.querySelector('#timeout');
-const formDescription = formContainer.querySelector('#description');
+//const formDescription = formContainer.querySelector('#description');
 const submitButton = formContainer.querySelector('.ad-form__submit');
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -51,11 +53,13 @@ const TYPES = {
 const addDisabled = (status) => {
   if (!status) {
     formContainer.classList.add('ad-form--disabled');
+    filterContainer.classList.add('.map__filters--disabled');
     formElemets.forEach((element) => {
       element.disabled = true;
     });
   } else {
     formContainer.classList.remove('ad-form--disabled');
+    filterContainer.classList.remove('.map__filters--disabled');
     formElemets.forEach((element) => {
       element.disabled = false;
     });
@@ -104,17 +108,32 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
+const resetSlider = () => {
+  priceSlider.updateOptions({
+    range: {
+      min: 0,
+      max: 100000,
+    },
+    start: 0,
+    step: 1000,
+  });
+};
+
+
 const resetForm = () => {
-  formTitle.value = '';
-  roomNumber.selectedIndex = 0;
-  houseType.selectedIndex = 0;
-  guestNumber.selectedIndex = 2;
-  timeIn.selectedIndex = 0;
-  timeOut.selectedIndex = 0;
-  formDescription.value = '';
-  priceSlider.noUiSlider.set(0);
-  formPrice.value = 0;
+  formContainer.reset();
+  //   formTitle.value = '';
+  //   roomNumber.selectedIndex = 0;
+  //   houseType.selectedIndex = 0;
+  //   guestNumber.selectedIndex = 2;
+  //   timeIn.selectedIndex = 0;
+  //   timeOut.selectedIndex = 0;
+  //   formDescription.value = '';
+  //   priceSlider.noUiSlider.set(0);
+  //   formPrice.value = 0;
   resetMap();
+  resetSlider();
+  resetFilters();
 };
 
 noUiSlider.create(priceSlider, {
@@ -174,7 +193,7 @@ const setOfferformSubmit = () => {
         unblockSubmitButton();
         showErrMessage();
       },
-      new FormData(evt.target),
+      new FormData(formContainer),
       );
     }
   });
