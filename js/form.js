@@ -4,18 +4,6 @@ import {sendData, getData} from './api.js';
 import {resetMap} from './map.js';
 import {resetFilters} from './filters.js';
 
-const formContainer = document.querySelector('.ad-form');
-const filterContainer = document.querySelector('.map__filters');
-const formElemets = document.querySelectorAll('fieldset', 'select', '.map__filters');
-const formTitle = formContainer.querySelector('#title');
-const formPrice = formContainer.querySelector('#price');
-const roomNumber = formContainer.querySelector('#room_number');
-const guestNumber = formContainer.querySelector('#capacity');
-const priceSlider = formContainer.querySelector('.ad-form__slider');
-const houseType = formContainer.querySelector('#type');
-const timeIn = formContainer.querySelector('#timein');
-const timeOut = formContainer.querySelector('#timeout');
-const submitButton = formContainer.querySelector('.ad-form__submit');
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE = 100000;
@@ -49,6 +37,19 @@ const TYPES = {
   },
 };
 
+const formContainer = document.querySelector('.ad-form');
+const filterContainer = document.querySelector('.map__filters');
+const formElemets = document.querySelectorAll('fieldset', 'select', '.map__filters');
+const formTitle = formContainer.querySelector('#title');
+const formPrice = formContainer.querySelector('#price');
+const roomNumber = formContainer.querySelector('#room_number');
+const guestNumber = formContainer.querySelector('#capacity');
+const priceSlider = formContainer.querySelector('.ad-form__slider');
+const houseType = formContainer.querySelector('#type');
+const timeIn = formContainer.querySelector('#timein');
+const timeOut = formContainer.querySelector('#timeout');
+const submitButton = formContainer.querySelector('.ad-form__submit');
+
 const addDisabled = (status) => {
   if (!status) {
     formContainer.classList.add('ad-form--disabled');
@@ -65,13 +66,6 @@ const addDisabled = (status) => {
   }
 };
 
-timeIn.addEventListener('change', () => {
-  timeOut.value = timeIn.value;
-});
-timeOut.addEventListener('change', () => {
-  timeIn.value = timeOut.value;
-});
-
 const pristine = new Pristine (formContainer, {
   classTo:'ad-form__element',
   errorClass: 'ad-form__element--error',
@@ -83,7 +77,7 @@ const pristine = new Pristine (formContainer, {
 
 const checkCapacity = () => ROOM_OPTION[roomNumber.value].includes(guestNumber.value);
 
-const errorTextCapacity = () => {
+const createErrorTextCapacity = () => {
   if (roomNumber.value === '1') {
     return '1 комната — для 1 гостя';
   } else if (roomNumber.value === '2') {
@@ -96,7 +90,7 @@ const errorTextCapacity = () => {
 };
 
 const checkPriceMin = () => formPrice.value >= TYPES[houseType.value].min;
-const minPriceText = () => `Цена не менее ${TYPES[houseType.value].min}!`;
+const createMinPriceText = () => `Цена не менее ${TYPES[houseType.value].min}!`;
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
@@ -124,6 +118,27 @@ const resetForm = () => {
   resetMap();
   resetSlider();
   resetFilters();
+};
+
+const setOfferformSubmit = () => {
+  formContainer.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendData(() => {
+        unblockSubmitButton();
+        showSuccessMessage();
+        getData(resetForm, () => {showAlert('Ошибка.Обновите страницу!');});
+      },
+      () => {
+        unblockSubmitButton();
+        showErrMessage();
+      },
+      new FormData(formContainer),
+      );
+    }
+  });
 };
 
 noUiSlider.create(priceSlider, {
@@ -157,7 +172,7 @@ houseType.addEventListener('change', () => {
   formPrice.placeholder = `от ${TYPES[houseType.value].placeholder} ₽`;
 });
 
-pristine.addValidator(formPrice, checkPriceMin, minPriceText);
+pristine.addValidator(formPrice, checkPriceMin, createMinPriceText);
 
 pristine.addValidator(formTitle, (value) => checkTiteLength(value, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH),
   `Заголовок должен быть от ${MIN_TITLE_LENGTH} до ${MAX_TITLE_LENGTH} символов!`);
@@ -165,28 +180,15 @@ pristine.addValidator(formTitle, (value) => checkTiteLength(value, MIN_TITLE_LEN
 pristine.addValidator(formPrice, (value) => checkPrice(value, MAX_PRICE),
   `Цена не более ${MAX_PRICE}!`);
 
-pristine.addValidator(roomNumber, checkCapacity, errorTextCapacity);
-pristine.addValidator(guestNumber, checkCapacity, errorTextCapacity);
+pristine.addValidator(roomNumber, checkCapacity, createErrorTextCapacity);
+pristine.addValidator(guestNumber, checkCapacity, createErrorTextCapacity);
 
-const setOfferformSubmit = () => {
-  formContainer.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-    if (isValid) {
-      blockSubmitButton();
-      sendData(() => {
-        unblockSubmitButton();
-        showSuccessMessage();
-        getData(resetForm, () => {showAlert('Ошибка.Обновите страницу!');});
-      },
-      () => {
-        unblockSubmitButton();
-        showErrMessage();
-      },
-      new FormData(formContainer),
-      );
-    }
-  });
-};
+timeIn.addEventListener('change', () => {
+  timeOut.value = timeIn.value;
+});
+timeOut.addEventListener('change', () => {
+  timeIn.value = timeOut.value;
+});
+
 export {addDisabled, setOfferformSubmit/*, resetForm*/};
 

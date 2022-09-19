@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 5000;
+
 const getRandomInteger = (min, max) => {
   if (min < 0 || max < 0 || min >= max) {
     return -1;
@@ -35,7 +37,6 @@ const checkTiteLength = (value, min, max) => value.length >= min && value.length
 
 const checkPrice = (value, max) => value <= max;
 
-const ALERT_SHOW_TIME = 5000;
 const showAlert = (message) => {
   const alert=document.createElement('div');
   alert.style.position ='absolute';
