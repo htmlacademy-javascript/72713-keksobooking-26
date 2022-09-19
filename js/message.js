@@ -19,12 +19,12 @@ const onErrMessageEscKeydown = (evt) => {
 };
 
 const onWindowSuccessMessageClose = (evt) => {
-  if (evt.target.className !== 'success__inner') {
+  if (evt.target.className !== 'success') {
     closeSuccessMessage();}
 };
 
 const onWindowErrMessageClose = (evt) => {
-  if (evt.target.className !== 'success__inner') {
+  if (evt.target.className !== 'error') {
     closeErrMessage();}
 };
 
