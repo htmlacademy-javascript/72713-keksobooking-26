@@ -1,19 +1,19 @@
 import {setOffersMarker, resetMap} from './map.js';
 import { debounce } from './util.js';
 
-const filterForm = document.querySelector('.map__filters');
-const housingType = filterForm.querySelector('#housing-type');
-const housingPrice = filterForm.querySelector('#housing-price');
-const housingRooms = filterForm.querySelector('#housing-rooms');
-const housingGuests = filterForm.querySelector('#housing-guests');
-const housingFeatures = Array.from(filterForm.querySelectorAll('map__checkbox'));
-
 const FILTER_PRICES = {
   middle: 10000,
   high: 50000,
 };
 
 const ADS_NUMBERS = 10;
+
+const filterForm = document.querySelector('.map__filters');
+const housingType = filterForm.querySelector('#housing-type');
+const housingPrice = filterForm.querySelector('#housing-price');
+const housingRooms = filterForm.querySelector('#housing-rooms');
+const housingGuests = filterForm.querySelector('#housing-guests');
+const housingFeatures = Array.from(filterForm.querySelectorAll('map__checkbox'));
 
 let offers = [];
 
@@ -25,9 +25,9 @@ const activateFilter = (data) => {
   });
 };
 
-const typeFilter = (offer) => housingType.value === offer.offer.type || housingType.value === 'any';
+const filteredType = (offer) => housingType.value === offer.offer.type || housingType.value === 'any';
 
-const priceFilter = (offer, price) => {
+const filteredPrice = (offer, price) => {
   switch (price) {
     case 'any':
       return true;
@@ -40,11 +40,11 @@ const priceFilter = (offer, price) => {
   }
 };
 
-const roomFilter = (offer) => Number(housingRooms.value) === offer.offer.rooms || housingRooms.value === 'any';
+const filteredRoom = (offer) => Number(housingRooms.value) === offer.offer.rooms || housingRooms.value === 'any';
 
-const guestFilter = (offer) => Number(housingGuests.value) === offer.offer.guests || housingGuests.value === 'any';
+const filteredGuest = (offer) => Number(housingGuests.value) === offer.offer.guests || housingGuests.value === 'any';
 
-const featuresFilter = (offer) => {
+const filteredFeatures = (offer) => {
   if (housingFeatures.length && offer) {
     return housingFeatures.every((element) => offer.includes(element.value));
   }
@@ -55,11 +55,11 @@ const offersFilter = () => {
   const filteredOffers = [];
   for (const offer of offers) {
     if (
-      typeFilter(offer) &&
-      priceFilter(offer, housingPrice.value) &&
-      roomFilter(offer) &&
-      guestFilter(offer) &&
-      featuresFilter(offer)) {
+      filteredType(offer) &&
+      filteredPrice(offer, housingPrice.value) &&
+      filteredRoom(offer) &&
+      filteredGuest(offer) &&
+      filteredFeatures(offer)) {
       filteredOffers.push(offer);
     }
     if (filteredOffers.length >= ADS_NUMBERS) {

@@ -5,7 +5,7 @@ const previewAvatar = document.querySelector('.ad-form-header__preview img');
 const choosePhotoHouse = document.querySelector('.ad-form__upload input[type=file]');
 const previewPhotoHouse = document.querySelector('.ad-form__photo');
 
-const photoPrep = (type, preview) => {
+const preparationPhoto = (type, preview) => {
   const file = type.files[0];
   const fileName = file.name.toLowerCase();
   const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
@@ -22,6 +22,6 @@ const createImg = (container) => {
   return photoElement;
 };
 
-chooserAvatar.addEventListener('change', () => photoPrep(chooserAvatar, previewAvatar));
+chooserAvatar.addEventListener('change', () => preparationPhoto(chooserAvatar, previewAvatar));
 
-choosePhotoHouse.addEventListener('change', () => photoPrep(choosePhotoHouse, createImg(previewPhotoHouse)));
+choosePhotoHouse.addEventListener('change', () => preparationPhoto(choosePhotoHouse, createImg(previewPhotoHouse)));
