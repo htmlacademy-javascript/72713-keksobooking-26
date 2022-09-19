@@ -1,6 +1,6 @@
-import {checkTiteLength, checkPrice} from './util.js';
+import {checkTiteLength, checkPrice, showAlert} from './util.js';
 import{showSuccessMessage, showErrMessage} from './message.js';
-import {sendData} from './api.js';
+import {sendData, getData} from './api.js';
 import {resetMap} from './map.js';
 import {resetFilters} from './filters.js';
 
@@ -15,7 +15,6 @@ const priceSlider = formContainer.querySelector('.ad-form__slider');
 const houseType = formContainer.querySelector('#type');
 const timeIn = formContainer.querySelector('#timein');
 const timeOut = formContainer.querySelector('#timeout');
-//const formDescription = formContainer.querySelector('#description');
 const submitButton = formContainer.querySelector('.ad-form__submit');
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -122,15 +121,6 @@ const resetSlider = () => {
 
 const resetForm = () => {
   formContainer.reset();
-  //   formTitle.value = '';
-  //   roomNumber.selectedIndex = 0;
-  //   houseType.selectedIndex = 0;
-  //   guestNumber.selectedIndex = 2;
-  //   timeIn.selectedIndex = 0;
-  //   timeOut.selectedIndex = 0;
-  //   formDescription.value = '';
-  //   priceSlider.noUiSlider.set(0);
-  //   formPrice.value = 0;
   resetMap();
   resetSlider();
   resetFilters();
@@ -187,7 +177,7 @@ const setOfferformSubmit = () => {
       sendData(() => {
         unblockSubmitButton();
         showSuccessMessage();
-        resetForm();
+        getData(resetForm, () => {showAlert('Ошибка.Обновите страницу!');});
       },
       () => {
         unblockSubmitButton();
@@ -198,5 +188,5 @@ const setOfferformSubmit = () => {
     }
   });
 };
-export {addDisabled, setOfferformSubmit, resetForm};
+export {addDisabled, setOfferformSubmit/*, resetForm*/};
 
