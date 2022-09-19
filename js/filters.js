@@ -13,7 +13,7 @@ const housingType = filterForm.querySelector('#housing-type');
 const housingPrice = filterForm.querySelector('#housing-price');
 const housingRooms = filterForm.querySelector('#housing-rooms');
 const housingGuests = filterForm.querySelector('#housing-guests');
-const housingFeatures = Array.from(filterForm.querySelectorAll('map__checkbox'));
+const housingFeatures = filterForm.querySelectorAll('.map__features :checked');
 
 let offers = [];
 
@@ -46,7 +46,7 @@ const filteredGuest = (offer) => Number(housingGuests.value) === offer.offer.gue
 
 const filteredFeatures = (offer) => {
   if (housingFeatures.length && offer) {
-    return housingFeatures.every((element) => offer.includes(element.value));
+    return Array.from(housingFeatures).every((element) => offer.includes(element.value));
   }
   return housingFeatures.length === 0;
 };
