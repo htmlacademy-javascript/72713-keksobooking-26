@@ -1,4 +1,4 @@
-import {setOffersMarker} from './map.js';
+import {setOffersMarker, resetMap} from './map.js';
 import { debounce } from './util.js';
 
 const filterForm = document.querySelector('.map__filters');
@@ -74,6 +74,6 @@ const resetFilters = () => {
   setOffersMarker(offers.slice(0, ADS_NUMBERS));
 };
 
-const setOnFilterChange = () => filterForm.addEventListener('change', () => debounce(setOffersMarker(offersFilter())));
+const setOnFilterChange = () => filterForm.addEventListener('change', debounce(() => (resetMap(offersFilter()))));
 
 export {resetFilters, setOnFilterChange, activateFilter};

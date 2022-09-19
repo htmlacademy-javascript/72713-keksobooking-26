@@ -4,6 +4,7 @@ import {initMap} from './map.js';
 import {getData} from './api.js';
 import {showAlert} from './util.js';
 import {setOnFilterChange, activateFilter} from './filters.js';
+import './photo-upload.js';
 //renderNewOffer(createManyAds(ADS_NUMBERS));
 
 
